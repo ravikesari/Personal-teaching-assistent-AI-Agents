@@ -3,12 +3,12 @@ from crewai import Crew, Agent, Task, Process, LLM
 import re
 
 app = Flask(__name__)
-app.secret_key = "fnknfss5s4vSvsksjnsvjs"
+app.secret_key = ""
 
 llm = LLM(
     model="groq/llama3-8b-8192",
     temperature=0,
-    api_key="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"
+    api_key=""
 )
 
 study_path_designer = Agent(
