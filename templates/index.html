@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Generate Study Path</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Generate Study Path</h1>
+        <form id="study-path-form">
+            <label for="topic">Topic:</label>
+            <input type="text" id="topic" name="topic" required>
+            <label for="user_level">Level:</label>
+            <input type="text" id="user_level" name="user_level" required>
+            <button type="submit">Generate</button>
+        </form>
+        <div id="study-path-result" style="display: none;">
+            <h2>Generated Study Path</h2>
+            <ul id="study-path-list"></ul>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $("#study-path-form").submit(function (e) {
+            e.preventDefault();
+
+            const formData = $(this).serialize();
+
+            $.post("/generate_study_path", formData, function (response) {
+                if (response.status === "success") {
+                    const studyPathList = $("#study-path-list");
+                    studyPathList.empty();
+                    response.study_path.forEach(section => {
+                        studyPathList.append(`<li>${section.id}: ${section.title}</li>`);
+                    });
+
+                    $("#study-path-result").show();
+                } else {
+                    alert(response.message);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Study Path</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Study Path for {{ topic }} ({{ user_level }})</h1>
+        <div id="study-path">
+            <h2>Generated Study Path</h2>
+            <ul>
+                {% for section in study_path %}
+                <li>{{ section.id }}: {{ section.title }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div id="current-section">
+            <h2>Current Section</h2>
+            <p id="section-title">Click "Next" to start with Section 1.1</p>
+            <div id="section-details">
+                <h3>Explanation:</h3>
+                <p id="explanation"></p>
+                <h3>Quiz:</h3>
+                <p id="quiz"></p>
+            </div>
+        </div>
+
+        <button id="next-section-btn">Next</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const topic = "{{ topic }}";
+        const userLevel = "{{ user_level }}";
+
+        $("#next-section-btn").click(function () {
+            $.post("/next_section", { topic, user_level: userLevel }, function (response) {
+                if (response.status === "done") {
+                    alert(response.message);
+                    $("#next-section-btn").hide();
+                } else {
+                    $("#section-title").text(`${response.section.id}: ${response.section.title}`);
+                    $("#explanation").text(response.explanation);
+                    $("#quiz").text(response.quiz);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
